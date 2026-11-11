@@ -1,12 +1,19 @@
 # CLAUDE.md
 
-Este archivo proporciona orientación a Claude Code (claude.ai/code) al trabajar con código en este repositorio.
 
 ## Descripción General
 
 **App Activa Biblioteca** es un sistema de gestión de bibliotecas que maneja préstamos de libros, reservas, gestión de usuarios, sanciones y solicitudes de adquisición. La aplicación utiliza una arquitectura **Modelo-Vista-Controlador (MVC)** con TypeScript, HTML, CSS y PostgreSQL.
 
-> **Estado actual del repositorio**: el proyecto está en fase de diseño. Solo existe la carpeta `docs/` (esquema de BD, casos de uso y especificación técnica). **Aún no hay código fuente, `package.json`, ni sistema de build/test/run definido.** Las secciones marcadas como *previsto* describen convenciones de diseño acordadas, no lo que ya está implementado.
+> **Estado actual del repositorio**: el proyecto está en fase de diseño. Solo existe la carpeta `docs/` (esquema de BD, casos de uso y especificación técnica). **Aún no hay código fuente, `package.json`, ni sistema de build/test/run definido.** Las secciones marcadas como *previsto* describen convenciones de diseño acordadas, no lo que ya está implementado. En `docs/ux-ui/*.png`: mockups de vistas
+
+## Comandos
+- Instalar: npm install
+- Tests: npm test
+- Comprobar tipos: npm run typecheck
+- Lint: npm run lint
+
+
 
 ## Arquitectura
 
@@ -15,6 +22,13 @@ Este archivo proporciona orientación a Claude Code (claude.ai/code) al trabajar
 - **Modelos**: Capa de datos que gestiona interacciones con PostgreSQL (consultas, lógica de negocio)
 - **Vistas**: Interfaz de usuario (plantillas HTML + estilos CSS)
 - **Controladores**: Manejadores de solicitudes coordinando entre vistas y modelos
+
+
+## Convenciones
+- TypeScript estricto. Prohibido `any`.
+- Nombres en español para el dominio (Socio, Libro, Prestamo).
+- El tiempo se inyecta (interfaz Reloj). Nunca `new Date()` dentro del dominio.
+- Errores de negocio con clases propias, no con strings.
 
 ### Base de Datos
 
@@ -75,6 +89,10 @@ Reglas del dominio que la implementación debe hacer cumplir. Son la fuente de v
   /models           # Capa de base de datos (TypeScript)
   /views            # Plantillas HTML que renderizan datos
   /utils            # Utilidades compartidas
+  /tests            # Todos los tests (Vitest), replicando la estructura de /src
+    /models         #   p. ej. src/tests/models/dominio/Isbn.test.ts → src/models/dominio/Isbn.ts
+    /controllers
+    /utils
 /public             # Recursos estáticos servidos directamente
   /styles           # Archivos CSS
   /images           # Imágenes
@@ -83,22 +101,25 @@ Reglas del dominio que la implementación debe hacer cumplir. Son la fuente de v
 /docs               # Documentación (seed, casos de uso, especificación técnica)
 ```
 
+**Convención de tests:** todo el código de testing vive en `/src/tests`, nunca junto al código de producción. Dentro de `/src/tests` se replica la ruta del archivo probado y el test se llama igual con sufijo `.test.ts`. `npm run typecheck` también comprueba los tests.
+
 **Convención:** `/src/views` contiene las plantillas HTML que renderizan datos dinámicos; `/public` aloja todo lo estático (CSS, imágenes, PDFs y páginas HTML que no dependen de datos).
 
-### Configuración de Base de Datos
 
-1. Inicializar base de datos PostgreSQL
-2. Ejecutar seed: `psql -U <usuario> -d <base_datos> -f docs/seedsql.sql`
-3. Verificar esquema con: `psql -U <usuario> -d <base_datos> -c "\dt"`
 
 ### Convenciones de Desarrollo (previsto)
 
 Estas son las convenciones acordadas para la futura implementación; todavía no hay código que las aplique.
 
+**Forma de trabajar**
+- Planifica antes de editar.
+- Haz TDD
+- No digas que algo está hecho sin haber ejecutado npm test.
+
 **Frontend**
 - HTML: Marcado semántico siguiendo los 33 casos de uso
 - CSS: Diseño responsivo (sin framework CSS presupuesto)
-- TypeScript: Manejo de formularios en cliente, validación, gestión de estado
+- TypeScript: Manejo de formularios en cliente, validación, gestión de estado. Usar `strict: true`, compilar con `tsc`
 
 **Backend**
 - Controladores TypeScript para manejar solicitudes HTTP

@@ -86,6 +86,12 @@ Esta arquitectura separa responsabilidades y facilita el mantenimiento y escalab
 
 ---
 
+### Configuración de Base de Datos
+
+1. Inicializar base de datos PostgreSQL
+2. Ejecutar seed: `psql -U <usuario> -d <base_datos> -f docs/seedsql.sql`
+3. Verificar esquema con: `psql -U <usuario> -d <base_datos> -c "\dt"`
+
 ## Descripción General
 
 App Activa Biblioteca es un sistema de gestión integral para bibliotecas que permite:
